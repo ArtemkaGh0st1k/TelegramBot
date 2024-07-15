@@ -6,7 +6,7 @@ from aiogram import Router
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
 from aiogram.types import Message, KeyboardButton
 
-from DataBase.DataBase import path_data_base
+from DataBase.DataBase import PATH_DATA_BASE
 from MainParameters.CommonParams import TYPE_COMMAND, TYPE_COMMAND_DICTIONARY
 from MainParameters.GetParams import NameSurnameList
 
@@ -28,7 +28,7 @@ async def send_NameAndSurname(message: Message):
 
     TYPE_COMMAND = TYPE_COMMAND_DICTIONARY[str(message.text)]
 
-    with sqlite3.connect(database=path_data_base) as db:
+    with sqlite3.connect(database=PATH_DATA_BASE) as db:
         sql = db.cursor()
 
         try:

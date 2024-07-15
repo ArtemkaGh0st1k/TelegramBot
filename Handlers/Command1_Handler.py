@@ -2,7 +2,7 @@ import re
 import sqlite3
 import logging
 import numpy as np
-from os import remove
+import os
 
 from matplotlib import pyplot as plt 
 from aiogram import Router
@@ -10,7 +10,7 @@ from aiogram.types import (Message, KeyboardButton,
                             ReplyKeyboardMarkup, FSInputFile)
 from aiogram.utils.keyboard import ReplyKeyboardBuilder 
 
-from DataBase.DataBase import path_data_base
+from DataBase.DataBase import PATH_DATA_BASE
 from MainParameters.CommonParams import OBJECT_LIST
 from MainParameters.GetParams import (PICK_NAME_SURNAME, PICK_OBJECT,
                                       NameSurnameList)
@@ -19,6 +19,7 @@ logging.getLogger(__name__)
 
 router_command_1 = Router()
 
+PATH_SAVE_FIG = "C:\\Users\\Артем\\Desktop\\TELEGRAMBOT-1\\Plot"
 
 @router_command_1.message(lambda student: NameSurnameList.__contains__(str(student.text)))
 async def send_oject_list(message: Message):
@@ -35,7 +36,7 @@ async def send_oject_list(message: Message):
     PICK_NAME_SURNAME = message.text.split(' ')
     
     
-    with sqlite3.connect(database=path_data_base) as db:
+    with sqlite3.connect(database=PATH_DATA_BASE) as db:
         sql = db.cursor()
         try:
             sql.execute("""SELECT obj FROM student WHERE (first_name = ?) AND (last_name = ?)""",
@@ -94,7 +95,7 @@ async def plot_scatter(message: Message):
     objectDB = PICK_OBJECT
 
    
-    with sqlite3.connect(database=path_data_base) as db:
+    with sqlite3.connect(database=PATH_DATA_BASE) as db:
         sql = db.cursor()
     
         #Выбранный студент -> его семместр и ср.бал
@@ -135,13 +136,11 @@ async def plot_scatter(message: Message):
             plt.scatter(x2,y2)
             plt.yticks(np.linspace(0, 5, 20))
             lgd = plt.legend([nameDB + ' ' + surnameDB, 'Ср.бал группы'],loc ='center left', bbox_to_anchor=(1,0.5))
-            plt.savefig('C:\\Users\\Артем\\Desktop\\Bot\\Plot\\scatter.png', 
+            plt.savefig(os.path.join(PATH_SAVE_FIG, 'scatter.png'), 
                         bbox_extra_artists=(lgd,), bbox_inches='tight')
             plt.close()
 
-            await message.answer_photo(photo=FSInputFile(path='C:\\Users\\Артем\\Desktop\\Bot\\Plot\\scatter.png'))
-                
-            #remove('C:\\Users\\Артем\\Desktop\\Bot\\Plot\\scatter.png')
+            await message.answer_photo(photo=FSInputFile(path=os.path.join(PATH_SAVE_FIG, "scatter.png")))
 
             logging.info(f'Finish {plot_scatter.__name__}')
 
@@ -159,7 +158,7 @@ async def plot_bar(message: Message):
 
     #Вытащить Имя и Фамилию студентов по выбранному предмету и средний бал
     
-    with sqlite3.connect(database=path_data_base) as db:
+    with sqlite3.connect(database=PATH_DATA_BASE) as db:
         sql = db.cursor()
         try:
             sql.execute("""SELECT DISTINCT first_name, last_name, mark FROM student WHERE obj = ?""",
@@ -183,19 +182,17 @@ async def plot_bar(message: Message):
 
             plt.title('bar')
             plt.yticks(np.linspace(0,5,20))
-            plt.text(index, avg_markList[index],f"{round(avg_markList[index],2)}")
+            plt.text(index, avg_markList[index], f"{round(avg_markList[index], 2)}")
 
             plt.bar(np.arange(len(avg_markList)), avg_markList, color = 'blue')
             plt.bar(np.array(index), avg_markList[index], color = 'red')
-            lgd = plt.legend(['Балы других студентов', namesList[index]],loc ='center left', bbox_to_anchor=(1,0.5))
+            lgd = plt.legend(['Балы других студентов', namesList[index]], loc ='center left', bbox_to_anchor=(1,0.5))
 
-            plt.savefig('C:\\Users\\Артем\\Desktop\\Bot\\Plot\\bar.png', 
+            plt.savefig(os.path.join(PATH_SAVE_FIG, "bar.png"), 
                         bbox_extra_artists=(lgd,), bbox_inches='tight')
             plt.close()
 
-            await message.answer_photo(photo=FSInputFile(path='C:\\Users\\Артем\\Desktop\\Bot\\Plot\\bar.png'))
-            
-            #remove('C:\\Users\\Артем\\Desktop\\Bot\\Plot\\bar.png')
+            await message.answer_photo(photo=FSInputFile(path=os.path.join(PATH_SAVE_FIG, "bar.png")))
 
             logging.info(f'Finish {plot_bar.__name__}')
 
@@ -211,7 +208,7 @@ async def plot_pie(message: Message):
 
     objectDB = PICK_OBJECT
 
-    with sqlite3.connect(database=path_data_base) as db:
+    with sqlite3.connect(database=PATH_DATA_BASE) as db:
         sql = db.cursor()
         try:
             #Вытащить Имя и Фамиля студентов по выбранному предмету и средний бал
@@ -245,11 +242,9 @@ async def plot_pie(message: Message):
 
             plt.title('Pie')
             plt.pie(values, labels = labels, explode=explode,shadow=True,autopct='%1.1f%%',startangle=180)
-            plt.savefig('C:\\Users\\Артем\\Desktop\\Bot\\Plot\\pie.png')
+            plt.savefig(os.path.join(PATH_SAVE_FIG, "pie.png"))
             plt.close() 
 
-            await message.answer_photo(photo=FSInputFile(path='C:\\Users\\Артем\\Desktop\\Bot\\Plot\\pie.png'))
-
-            #remove('C:\\Users\\Артем\\Desktop\\Bot\\Plot\\pie.png')
+            await message.answer_photo(photo=FSInputFile(path=os.path.join(PATH_SAVE_FIG, "pie.png")))
             
             logging.info(f'Finish {plot_pie.__name__}')

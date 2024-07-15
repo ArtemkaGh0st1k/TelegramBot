@@ -7,7 +7,8 @@ from russian_names import RussianNames
 
 from MainParameters.CommonParams import OBJECT_LIST
 
-path_data_base = "C:\\Users\\Артем\\Desktop\\Bot\\DataBase\\server.db"
+
+PATH_DATA_BASE = "C:\\Users\\Артем\\Desktop\\TELEGRAMBOT-1\\DataBase\\server.db"
 
 async def create_data_base():
         
@@ -17,10 +18,10 @@ async def create_data_base():
         logging.info(f'Enter to {create_data_base.__name__}')
 
         #проверка на создание файла базы данных
-        if (not exists(path=path_data_base)):
+        if (not exists(path=PATH_DATA_BASE)):
 
             #создание локальной базы данных
-            with sqlite3.connect(database=path_data_base) as db:
+            with sqlite3.connect(database=PATH_DATA_BASE) as db:
                 sql = db.cursor()
 
                 sql.execute("""CREATE TABLE IF NOT EXISTS student (

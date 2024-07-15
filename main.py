@@ -11,11 +11,11 @@ from DataBase.DataBase import create_data_base
 from Commands.Delete import router_delete
 from Commands.Insert import router_insert
 from Commands.NameSurnameShow import router_name_surname
-from Commands.ShowExcelTable import router_excel
-from Handlers.exception_handler import router_exception
-from Handlers.handler_command_1 import router_command_1
-from Handlers.handler_command_2 import router_command_2
-from Handlers.handler_command_3 import router_command_3
+from Commands.ExcelTableShow import router_excel
+from Handlers.Exception_Handler import router_exception
+from Handlers.Command1_Handler import router_command_1
+from Handlers.Command2_Handler import router_command_2
+from Handlers.Command3_Handler import router_command_3
 
 
 bot = Bot(token=TOKEN, parse_mode='html')

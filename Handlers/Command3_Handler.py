@@ -6,7 +6,7 @@ from aiogram import Router
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, Message
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
-from DataBase.DataBase import path_data_base
+from DataBase.DataBase import PATH_DATA_BASE
 from MainParameters.CommonParams import (TYPE_COMMAND, TYPE_COMMAND_DICTIONARY,
                                          OBJECT_LIST)
 from MainParameters.DeleteParams import (PICK_NAME_SURNAME, PICK_OBJECT,
@@ -29,7 +29,7 @@ async def send_info_object_delete(message: Message):
     global TYPE_COMMAND
     TYPE_COMMAND = TYPE_COMMAND_DICTIONARY[str(message.text)]
 
-    with sqlite3.connect(database=path_data_base) as db:
+    with sqlite3.connect(database=PATH_DATA_BASE) as db:
         sql = db.cursor()
         try:
             sql.execute("""SELECT DISTINCT obj FROM student""")
@@ -60,7 +60,7 @@ async def delete_object(message: Message):
 
     logging.info(f'Enter to {delete_object.__name__}')
     
-    with sqlite3.connect(database=path_data_base) as db:
+    with sqlite3.connect(database=PATH_DATA_BASE) as db:
         sql = db.cursor()
         try:
             sql.execute("""DELETE FROM student WHERE obj = ?""", (PICK_OBJECT,))
@@ -115,7 +115,7 @@ async def delete_semestr(message: Message):
         
     semestrDB = int(message.text)
 
-    with sqlite3.connect(database=path_data_base) as db:
+    with sqlite3.connect(database=PATH_DATA_BASE) as db:
         sql = db.cursor()
         try:
             sql.execute("""DELETE FROM student WHERE semestr = ?""", (semestrDB))
@@ -145,7 +145,7 @@ async def send_info_name_surname_delete(message: Message):
 
     TYPE_COMMAND = TYPE_COMMAND_DICTIONARY[str(message.text)]
 
-    with sqlite3.connect(database=path_data_base) as db:
+    with sqlite3.connect(database=PATH_DATA_BASE) as db:
         sql = db.cursor()
         try:
             sql.execute("""SELECT DISTINCT first_name, last_name FROM student""")
@@ -191,7 +191,7 @@ async def delete_name_surname(message: Message):
     global PICK_NAME_SURNAME
     PICK_NAME_SURNAME = message.text.split(' ')
 
-    with sqlite3.connect(database=path_data_base) as db:
+    with sqlite3.connect(database=PATH_DATA_BASE) as db:
         sql = db.cursor()
         try:
             sql.execute("""DELETE FROM student WHERE (first_name = ?) AND (last_name = ?)""",

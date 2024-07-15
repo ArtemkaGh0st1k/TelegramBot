@@ -7,7 +7,7 @@ from openpyxl import Workbook
 from aiogram import Router
 from aiogram.types import Message, FSInputFile
 
-from DataBase.DataBase import path_data_base
+from DataBase.DataBase import PATH_DATA_BASE
 from MainParameters.CommonParams import TYPE_COMMAND, TYPE_COMMAND_DICTIONARY
 
 logging.getLogger(__name__)
@@ -29,7 +29,7 @@ async def send_excel_data(message: Message):
     TYPE_COMMAND = TYPE_COMMAND_DICTIONARY[str(message.text)]
 
     
-    with sqlite3.connect(database=path_data_base) as db:
+    with sqlite3.connect(database=PATH_DATA_BASE) as db:
         sql = db.cursor()
         try:
             sql.execute("""SELECT * FROM student ORDER BY first_name""")
@@ -69,12 +69,10 @@ async def send_excel_data(message: Message):
                 sheet[row+2][4].value = columnSemestr[row]
                 sheet[row+2][5].value = columnAVGMark[row]
 
-            workbook.save(filename="C:\\Users\\Артем\\Desktop\\Bot\\DataBase\\DataBaseExcel.xlsx")
+            workbook.save(filename="C:\\Users\\Артем\\Desktop\\TELEGRAMBOT-1\\DataBase\\DataBaseExcel.xlsx")
                                                     
             workbook.close()
 
-            await message.answer_document(document=FSInputFile("C:\\Users\\Артем\\Desktop\\Bot\\DataBase\\DataBaseExcel.xlsx"))
-
-            #remove("C:\\Users\\Артем\\Desktop\\Bot\\DataBase\\DataBaseExcel.xlsx")
+            await message.answer_document(document=FSInputFile("C:\\Users\\Артем\\Desktop\\TELEGRAMBOT-1\\DataBase\\DataBaseExcel.xlsx"))
 
             logging.info(f'Finish {send_excel_data.__name__}')

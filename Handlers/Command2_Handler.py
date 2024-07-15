@@ -5,7 +5,7 @@ import logging
 from aiogram import Router
 from aiogram.types import Message
 
-from DataBase.DataBase import path_data_base
+from DataBase.DataBase import PATH_DATA_BASE
 
 logging.getLogger(__name__)
 
@@ -38,7 +38,7 @@ async def insert_value(message: Message):
     averege_markDB = substrings[6]
     
     
-    with sqlite3.connect(database=path_data_base) as db:
+    with sqlite3.connect(database=PATH_DATA_BASE) as db:
         sql = db.cursor()
     try:
         sql.execute("""INSERT INTO student (first_name, last_name, group, obj, semestr, mark) VALUES (?, ?, ?, ?, ?, ?)""",
