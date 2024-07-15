@@ -7,7 +7,6 @@ from russian_names import RussianNames
 
 from MainParameters.CommonParams import OBJECT_LIST
 
-
 path_data_base = "C:\\Users\\Артем\\Desktop\\Bot\\DataBase\\server.db"
 
 async def create_data_base():
